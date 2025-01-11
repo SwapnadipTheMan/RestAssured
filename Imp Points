@@ -1,0 +1,42 @@
+#################### baseURI , sending_response_from_JSON_file , .extract().response()/ .extract().response().asString(), #################################
+RestAssured.baseURI="https://rahulshettyacademy.com";
+Response response =given().log().all().queryParam("key","qaclick123").header("Content-Type","application/json").
+               // body(payloadAddUser.AddPlace())
+                  body(new String(Files.readAllBytes(Paths.get("C:\\Users\\Swapnadip\\IdeaProjects\\RestAssured_001\\src\\test\\java\\Day1_RAssured\\PayLoadAddPlace.Json"))))
+                .when().post("maps/api/place/add/json").
+                then().log().all().assertThat().statusCode(200).body("scope",equalTo("APP")).
+                 header("server","Apache/2.4.52 (Ubuntu)").extract().response();
+            //assertThat().body("msg",equalTo("book is successfully deleted"));  ========>Asserting message in the body
+            //        JsonPath js = new JsonPath(postResponse);
+            //        String placeId = js.getString("place_id");
+            //        System.out.println("Extracted place_id: " + placeId);
+  String place_id = response.jsonPath().getString("place_id");
+
+############################## How to Handel Complex JSON ########################################################
+
+ JsonPath js =new JsonPath(payloadAddUser.MockApiResponse());
+        //Print Purchase Amount
+        int purchaseAmount= Integer.parseInt(js.getString("dashboard.purchaseAmount")); 
+        System.out.println(purchaseAmount);
+        //Count of courses
+        int No_of_courses= js.getInt("courses.size()");
+        System.out.println(No_of_courses);
+        //3. Print Title of the first course
+        String first_course= js.getString("courses[0].title");
+        System.out.println(first_course);
+################################### // Add Attachment  ################################ Using multiPath for Uploading File  ############
+        
+        File file = new File("C:\\Users\\Swapnadip\\IdeaProjects\\RestAssured_001\\src\\test\\java\\JIRA\\BTI_LOGO_-removebg-preview.png");
+        given().log().all().header("Authorization",BasicAutKey)
+                .header("X-Atlassian-Token","no-check")
+                .multiPart("file", file).pathParam("id",id).
+                when().post("rest/api/3/issue/{id}/attachments").
+                then().log().all().assertThat().statusCode(200);
+############################### formParam ###########################################
+String response = given().log().all()
+                .header("Content-Type", "application/x-www-form-urlencoded") // Set content type
+                .formParam("grant_type", "client_credentials") // Grant type
+                .formParam("client_id", "692183103107-p0m7ent2hk7suguv4vq22hjcfhcr43pj.apps.googleusercontent.com") // Client ID
+                .formParam("client_secret", "erZOWM9g3UtwNRj340YYaK_W") // Client Secret
+                 .when().post("https://rahulshettyacademy.com/oauthapi/oauth2/resourceOwner/token")// Token endpoint
+                  .then().log().all().extract().response().asString();
