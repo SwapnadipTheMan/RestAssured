@@ -40,3 +40,33 @@ String response = given().log().all()
                 .formParam("client_secret", "erZOWM9g3UtwNRj340YYaK_W") // Client Secret
                  .when().post("https://rahulshettyacademy.com/oauthapi/oauth2/resourceOwner/token")// Token endpoint
                   .then().log().all().extract().response().asString();
+###################################### Serilisation & Deserialisation ########################################################
+=>jackson-databind =====>mvn Repo 
+  AddPlace place = new AddPlace();
+        Location loc = new Location();
+        loc.setLat(22.1234);
+        loc.setLng(-11.6789);
+        place.setLocation(loc);
+        place.setAccuracy(50);
+        place.setPhone_number("+91 123 4567 890");
+        place.setName("TheManSwapnadip");
+        place.setAddress("Kolkata ,NewTown ");
+        List<String> type = new ArrayList<String>();
+        type.add("shoe park");
+        type.add("shop");
+        place.setTypes(type);
+        place.setWebsite("https://github.com/SwapnadipTheMan");
+        place.setLanguage("Hindi");
+
+        RestAssured.baseURI="https://rahulshettyacademy.com";
+         Response response =given().log().all().queryParam("key","qaclick123").header("Content-Type","application/json").
+             body(place).when().post("maps/api/place/add/json").
+            then().log().all().assertThat().statusCode(200).body("scope",equalTo("APP"))
+                 .header("server","Apache/2.4.52 (Ubuntu)").extract()
+            .response();
+##################################################################### SpecBuilder ########################################################################################
+
+RequestSpecification reqspec= new RequestSpecBuilder().setBaseUri("https://rahulshettyacademy.com").addQueryParam("key","qaclick123").addHeader("Content-Type","application/json").build();
+
+ResponseSpecification resspec= new ResponseSpecBuilder().expectContentType("application/json").expectStatusCode(200).build();
+
