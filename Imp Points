@@ -64,9 +64,18 @@ String response = given().log().all()
             then().log().all().assertThat().statusCode(200).body("scope",equalTo("APP"))
                  .header("server","Apache/2.4.52 (Ubuntu)").extract()
             .response();
+    
+     getCourses gc =given().log().all().queryParam("access_token",access_token)
+                .when().get("https://rahulshettyacademy.com/oauthapi/getCourseDetails")
+                .then().log().all().assertThat().statusCode(401).extract().as(getCourses.class);
+        System.out.println(gc.getCourses().getApi().get(1).getCourseTitle());
 ##################################################################### SpecBuilder ########################################################################################
 
 RequestSpecification reqspec= new RequestSpecBuilder().setBaseUri("https://rahulshettyacademy.com").addQueryParam("key","qaclick123").addHeader("Content-Type","application/json").build();
 
 ResponseSpecification resspec= new ResponseSpecBuilder().expectContentType("application/json").expectStatusCode(200).build();
 
+Response response =given().spec(reqspec).body(new String(Files.readAllBytes(Paths.get("C:\\Users\\Swapnadip\\IdeaProjects\\RestAssured_001\\src\\test\\java\\Day1_RAssured\\PayLoadAddPlace.Json"))))
+                         .when().post("maps/api/place/add/json").
+                then().log().all().spec(resspec).body("scope",equalTo("APP"))
+        .header("server","Apache/2.4.52 (Ubuntu)").extract().response();
