@@ -32,14 +32,18 @@ Response response =given().log().all().queryParam("key","qaclick123").header("Co
                 .multiPart("file", file).pathParam("id",id).
                 when().post("rest/api/3/issue/{id}/attachments").
                 then().log().all().assertThat().statusCode(200);
-############################### formParam ###########################################
+############################### formParam /path Parameter###########################################
 String response = given().log().all()
                 .header("Content-Type", "application/x-www-form-urlencoded") // Set content type
                 .formParam("grant_type", "client_credentials") // Grant type
                 .formParam("client_id", "692183103107-p0m7ent2hk7suguv4vq22hjcfhcr43pj.apps.googleusercontent.com") // Client ID
                 .formParam("client_secret", "erZOWM9g3UtwNRj340YYaK_W") // Client Secret
                  .when().post("https://rahulshettyacademy.com/oauthapi/oauth2/resourceOwner/token")// Token endpoint
-                  .then().log().all().extract().response().asString();
+                  .then().log().all().extract().response().asString(); 
+
+given().spec(PlaceOrderReq).pathParam("ProductID",PR.getProductId())
+                .when().delete("product/delete-product/{ProductID}")
+                .then().assertThat().statusCode(200).log().all();
 ###################################### Serilisation & Deserialisation ########################################################
 =>jackson-databind =====>mvn Repo 
   AddPlace place = new AddPlace();
@@ -69,6 +73,30 @@ String response = given().log().all()
                 .when().get("https://rahulshettyacademy.com/oauthapi/getCourseDetails")
                 .then().log().all().assertThat().statusCode(401).extract().as(getCourses.class);
         System.out.println(gc.getCourses().getApi().get(1).getCourseTitle());
+##########################################    POJO ########################################################
+//        {
+//            "orders": [
+//            {"country": "India",
+//             "productOrderedId": "6788bdb9e2b5443b1f25d975"
+//            }
+//          ]
+//        }
+
+       
+        Orders order1= new Orders();
+        order1.setCountry("India");
+        order1.setProductOrderedId(PR.getProductId());
+        List<Orders> orders=new ArrayList<Orders>();
+        orders.add(order1);
+        
+        postOrders PO= new postOrders();
+        PO.setOrders(orders);
+//        PO {
+//        "orders":[{
+//            order1.setCountry("India");
+//            order1.setProductOrderedId(PR.getProductId());
+//                  }]
+//        }
 ##################################################################### SpecBuilder ########################################################################################
 
 RequestSpecification reqspec= new RequestSpecBuilder().setBaseUri("https://rahulshettyacademy.com").addQueryParam("key","qaclick123").addHeader("Content-Type","application/json").build();
